@@ -1,18 +1,30 @@
-# .idea/
+# IDEs and editors
 .idea/
 .vscode/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.swp
+*.swo
 
-# Python environment
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 .venv/
 env/
 venv/
+ENV/
 
-# Text files
-.txt
+# Data & Pickles
+*.pkl
+*.pickle
 
-# .DS_Store
+# Airflow Runtime (Generated)
+airflow/logs/
+airflow/data/
+airflow/plugins/__pycache__/
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Secrets
+.env

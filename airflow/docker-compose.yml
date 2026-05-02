@@ -18,6 +18,8 @@ x-airflow-common: &airflow-common
     - NDC_OLAP_USER=ndc_analyst
     - NDC_OLAP_PASSWORD=ndc_analyst_2025
     - DATA_DIR=/opt/airflow/data
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
