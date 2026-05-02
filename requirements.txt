@@ -1,0 +1,6 @@
+apache-airflow>=2.10.0
+apache-airflow-providers-postgres
+pandas
+psycopg2-binary
+sqlalchemy
+numpy

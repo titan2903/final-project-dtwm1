@@ -1,0 +1,7 @@
+promo_code,description,discount_type,discount_value,min_purchase,max_discount,usage_limit_total,usage_limit_per_user,valid_from,valid_until,can_stack,created_by
+HEMAT2025,Diskon 25% semua kategori,percentage,25,100000,500000,,3,2025-01-01,2025-06-30,False,promo_team
+NEWYEAR25,Diskon Rp 250rb untuk pembelian > 1jt,fixed,250000,1000000,,500,1,2025-01-01,2025-01-31,False,promo_team
+FREESHIP,Gratis Ongkir,fixed,0,0,,,5,2025-01-01,2025-06-30,True,logistics_team
+MEMBER20,Diskon 20% member premium,percentage,20,200000,400000,,2,2025-02-01,2025-06-30,False,promo_team
+FLASH50,Flash Sale 50% max 1jt,percentage,50,0,1000000,200,1,2024-12-27,2025-06-30,False,campaign_team
+WEEKEND10,Diskon 10% weekend,percentage,10,50000,200000,,10,2025-01-01,2025-06-30,True,promo_team

@@ -1,0 +1,18 @@
+# .idea/
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python environment
+.venv/
+env/
+venv/
+
+# Text files
+.txt
+
+# .DS_Store
+.DS_Store
