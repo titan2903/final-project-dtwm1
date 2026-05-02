@@ -45,6 +45,7 @@ OLTP_PORT=25432
 OLAP_PORT=25433
 AIRFLOW_PORT=28080
 AIRFLOW_PG_PORT=25434
+METABASE_PORT=23000
 
 OLTP_USER="ndc_user"
 OLTP_PASS="ndc_password_2025"
@@ -124,6 +125,13 @@ cmd_status() {
         warn "Airflow not reachable"; all_ok=false
     fi
 
+    # Metabase
+    if curl -sf "http://localhost:${METABASE_PORT}/api/health" | grep -q "ok" 2>/dev/null; then
+        ok "Metabase UI: http://localhost:${METABASE_PORT}"
+    else
+        warn "Metabase not reachable"; all_ok=false
+    fi
+
     if $all_ok; then ok "Everything is ready!"; else warn "Some components are missing — run ./setup.sh"; fi
 }
 
@@ -142,7 +150,7 @@ step_1_prerequisites() {
     ok "Docker $docker_ver"
 
     # Check ports
-    for port in $OLTP_PORT $OLAP_PORT $AIRFLOW_PORT $AIRFLOW_PG_PORT; do
+    for port in $OLTP_PORT $OLAP_PORT $AIRFLOW_PORT $AIRFLOW_PG_PORT $METABASE_PORT; do
         if lsof -i ":$port" &>/dev/null 2>&1 || ss -tlnp 2>/dev/null | grep -q ":$port " || netstat -an 2>/dev/null | grep -q "\.$port "; then
             if docker ps --format '{{.Names}}' | grep -qE "fraud-|airflow"; then
                 warn "Port $port in use by existing container (will be reused or replaced)"
@@ -238,6 +246,9 @@ step_5_prepare_airflow() {
     step "5/7 — Preparing Airflow data & config"
 
     mkdir -p "$DATA_DIR" "$AIRFLOW_DIR/logs" "$AIRFLOW_DIR/plugins"
+    # Ensure Docker containers can write to ini directories (common Linux issue)
+    # We ignore errors here because some sub-files might be owned by the container user
+    chmod -R 777 "$DATA_DIR" "$AIRFLOW_DIR/logs" "$AIRFLOW_DIR/plugins" 2>/dev/null || true
 
     # Copy CSV files
     for csv in customer_complaints.csv ip_device_log.csv promo_codes.csv; do
@@ -330,6 +341,7 @@ step_7_verify() {
     printf "${GREEN}${BOLD}╠══════════════════════════════════════════════════════════╣${NC}\n"
     printf "${GREEN}${BOLD}║${NC}                                                          ${GREEN}${BOLD}║${NC}\n"
     printf "${GREEN}${BOLD}║${NC}  Airflow UI  : ${CYAN}http://localhost:${AIRFLOW_PORT}${NC}  (admin/admin)    ${GREEN}${BOLD}║${NC}\n"
+    printf "${GREEN}${BOLD}║${NC}  Metabase UI : ${CYAN}http://localhost:${METABASE_PORT}${NC}                   ${GREEN}${BOLD}║${NC}\n"
     printf "${GREEN}${BOLD}║${NC}  OLTP DB     : ${CYAN}localhost:${OLTP_PORT}${NC}  (${OLTP_USER})          ${GREEN}${BOLD}║${NC}\n"
     printf "${GREEN}${BOLD}║${NC}  OLAP DB     : ${CYAN}localhost:${OLAP_PORT}${NC}  (${OLAP_USER})          ${GREEN}${BOLD}║${NC}\n"
     printf "${GREEN}${BOLD}║${NC}                                                          ${GREEN}${BOLD}║${NC}\n"
